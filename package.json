@@ -1,0 +1,19 @@
+{
+  "name": "js-mongo-query",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Tung Vu <me@tungv.com>",
+  "scripts": {
+    "test": "sh run_tests.sh",
+    "test-watch": "sh run_tests-watch.sh"
+  },
+  "dependencies": {
+    "coffee-script": "^1.7.1",
+    "lodash": "^2.4.1",
+    "log4js": "^0.6.14",
+    "type": "0.0.3"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1"
+  }
+}
