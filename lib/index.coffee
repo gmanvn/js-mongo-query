@@ -1,7 +1,10 @@
 _ = require 'lodash'
 operators = require './operators.coffee'
 
+specialOps = Object.keys operators
+
 log4js = require 'log4js'
+type = require 'type-component'
 
 ###
   object: {
@@ -25,12 +28,31 @@ log4js = require 'log4js'
 join = (path, key)->
   if path.length then [path, key].join('.') else key
 
-match = (actual, matcher)->
+match = (actual, matcher, context)->
   logger = log4js.getLogger 'match'
   logger.setLevel 'ALL'
 
   logger.debug 'actual', actual
   logger.debug 'matcher', matcher
+
+  switch type matcher
+    when 'string', 'number'
+      return actual == matcher
+
+    when 'regexp'
+      return
+
+    when 'object'
+      logger.debug 'object'
+      return _.every matcher, (value, key)->
+        logger.debug '  key, value', key, value
+        if key in specialOps
+          return operators[key](actual,value,context)
+
+        ## key == sub path
+        subActual = getter actual, key
+        return match subActual, value, context
+
 
 
 getter = (context, path)->
@@ -63,7 +85,7 @@ queryFn = module.exports = (object, query, path='')->
       else
         logger.debug 'path', key
         actual = getter object, join path, key
-        results[key] = match actual, value
+        results[key] = match actual, value, context
 
   logger.debug 'results', results, path
 
