@@ -30,20 +30,38 @@ join = (path, key)->
 
 match = (actual, matcher, context)->
   logger = log4js.getLogger 'match'
-  logger.setLevel 'ALL'
+  logger.setLevel 'ERROR'
 
-  logger.debug 'actual', actual
-  logger.debug 'matcher', matcher
+  actualType = type(actual)
+  matcherType = type(matcher)
+  inArray = actualType is 'array'
+
+  logger.debug 'actual', actual, "(#{ actualType })"
+  logger.debug 'matcher', matcher, "(#{ matcherType })"
+
+
+
 
   switch type matcher
-    when 'string', 'number'
-      return actual == matcher
+    when 'string'
+      logger.debug 'string'
+      if inArray
+        return actual.some (item)-> matcher == String item
+      else
+        return matcher == String actual
+
+    when 'number'
+      logger.debug 'number'
+      if inArray
+        return actual.some (item)-> matcher == Number item
+      else
+        return matcher == Number actual
 
     when 'regexp'
       return
 
     when 'object'
-      logger.debug 'object'
+      logger.debug 'object', Object.keys matcher
       return _.every matcher, (value, key)->
         logger.debug '  key, value', key, value
         if key in specialOps
@@ -62,6 +80,7 @@ getter = (context, path)->
 
 queryFn = module.exports = (object, query, path='')->
   logger = log4js.getLogger 'query'
+  logger.setLevel 'ERROR'
 
   results = {}
   for key, value of query
