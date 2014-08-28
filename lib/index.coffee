@@ -104,7 +104,7 @@ queryFn = module.exports = (object, query, path='')->
       else
         logger.debug 'path', key
         actual = getter object, join path, key
-        results[key] = match actual, value, context
+        results[key] = match actual, value, object
 
   logger.debug 'results', results, path
 

@@ -1,6 +1,6 @@
 {
   "name": "js-mongo-query",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "author": "Tung Vu <me@tungv.com>",
   "scripts": {
